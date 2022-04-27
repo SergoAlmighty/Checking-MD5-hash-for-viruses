@@ -206,32 +206,32 @@ echo ($r)?'<center><h2 class="action_title">Letter sent!<h2></center>':'Error. T
 
 
 function sendMailAttachment($mailTo, $from, $subject, $message, $file = false){
-		$separator = "---"; // separator in the letter
-		// Headings for the letter
-		$headers = "MIME-Version: 1.0\r\n";
-		$headers .= "From: $from\nReply-To: $from\n"; // asking who the letter is from
-		$headers .= "Content-Type: multipart/mixed; boundary=\"$separator\""; // in the header specify the delimiter
-		// If a letter with an attachment
-		if($file){
-				$bodyMail = "--$separator\n"; // the beginning of the message body, output the delimiter
-				$bodyMail .= "Content-Type:text/html; charset=\"utf-8\"\n"; // letter encoding
-				$bodyMail .= "Content-Transfer-Encoding: 7bit\n\n"; // Set the letter conversion
-				$bodyMail .= $message."\n"; // add the text of the letter
-				$bodyMail .= "--$separator\n";
-				$fileRead = fopen($file, "r"); // open the file
-				$contentFile = fread($fileRead, filesize($file)); // read it all the way through
-				fclose($fileRead); // close the file
-				$bodyMail .= "Content-Type: application/octet-stream; name==?utf-8?B?".base64_encode(basename($file))."?=\n";
-				$bodyMail .= "Content-Transfer-Encoding: base64\n"; // file encoding
-				$bodyMail .= "Content-Disposition: attachment; filename==?utf-8?B?".base64_encode(basename($file))."?=\n\n";
-				$bodyMail .= chunk_split(base64_encode($contentFile))."\n"; // encode and attach the file
-				$bodyMail .= "--".$separator ."--\n";
-		// unattached letter
-		}else{
-				$bodyMail = $message;
-		}
-		$result = mail($mailTo, $subject, $bodyMail, $headers); // send mail
-		return $result;
+	$separator = "---"; // separator in the letter
+	// Headings for the letter
+	$headers = "MIME-Version: 1.0\r\n";
+	$headers .= "From: $from\nReply-To: $from\n"; // asking who the letter is from
+	$headers .= "Content-Type: multipart/mixed; boundary=\"$separator\""; // in the header specify the delimiter
+	// If a letter with an attachment
+	if($file){
+		$bodyMail = "--$separator\n"; // the beginning of the message body, output the delimiter
+		$bodyMail .= "Content-Type:text/html; charset=\"utf-8\"\n"; // letter encoding
+		$bodyMail .= "Content-Transfer-Encoding: 7bit\n\n"; // Set the letter conversion
+		$bodyMail .= $message."\n"; // add the text of the letter
+		$bodyMail .= "--$separator\n";
+		$fileRead = fopen($file, "r"); // open the file
+		$contentFile = fread($fileRead, filesize($file)); // read it all the way through
+		fclose($fileRead); // close the file
+		$bodyMail .= "Content-Type: application/octet-stream; name==?utf-8?B?".base64_encode(basename($file))."?=\n";
+		$bodyMail .= "Content-Transfer-Encoding: base64\n"; // file encoding
+		$bodyMail .= "Content-Disposition: attachment; filename==?utf-8?B?".base64_encode(basename($file))."?=\n\n";
+		$bodyMail .= chunk_split(base64_encode($contentFile))."\n"; // encode and attach the file
+		$bodyMail .= "--".$separator ."--\n";
+	// unattached letter
+	}else{
+		$bodyMail = $message;
+	}
+	$result = mail($mailTo, $subject, $bodyMail, $headers); // send mail
+	return $result;
 }
 */
 ?>
