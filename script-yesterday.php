@@ -1,20 +1,7 @@
 <?php
 //----------------------------------- Export a table from a database -----------------------------------//
 
-// database record to be exported
-$db_record = 'user_info';
-// optional where query
-$where = 'md5';
-// filename for export
-$txt_filename = 'scanned-files/data_md5'.'.txt';
-// database variables
-$hostname = "localhost";
-
-$user = "*******";
-$password = "********";
-$database = "********";
-
-$port = 3306;
+include 'cfg.php'
 
 $conn = mysqli_connect($hostname, $user, $password, $database, $port);
 if (mysqli_connect_errno()) {
@@ -22,7 +9,7 @@ if (mysqli_connect_errno()) {
 }
 
 // query to get data from database for yesterday
-$query = mysqli_query($conn, "SELECT `md5` FROM `user_info` WHERE `**********` BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 SECOND");
+$query = mysqli_query($conn, "SELECT `md5` FROM `user_info` WHERE `created_at` BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 SECOND");
 
 $field = mysqli_field_count($conn);
 
@@ -39,7 +26,6 @@ while($row = mysqli_fetch_array($query)) {
    $txt_export.= '
 ';
 }
-
 // Write txt result to file
 file_put_contents($txt_filename, $txt_export);
 
@@ -116,8 +102,8 @@ $lines = array_unique($arr_filtered);  //Removing duplicate lines
 
 $yourstring = preg_replace('/(\b.{1,30}\s)/', "\n", $lines);  //We get the first 30 characters of the string (equal to the MD5 hash size).
 // $yourstring = str_replace("d41d8cd98f00b204e9800998ecf8427e","", $yourstring);  // Ignore hash 'd41d8cd98f00b204e9800998ecf8427e'.
-$yourstring = preg_replace('~\n{2,}~si', "\r\n" , str_replace("\r","\n",$yourstring));
-$yourstring = preg_replace("~^(?:[\w\h\pP]('?!$')?)+~m", '\'$0\'', $yourstring);
+$yourstring = preg_replace('~\n{2,}~si', "\r\n" , str_replace("\r","\n",$yourstring)); // Removing duplicate lines.
+$yourstring = preg_replace("~^(?:[\w\h\pP]('?!$')?)+~m", '\'$0\'', $yourstring); //  Removing blank lines.
 $name_final_file = 'final_file_data_md5.txt';
 file_put_contents('/scanned-files/' .$name_final_file, $yourstring);
 $final_small_file = $yourstring;
@@ -134,7 +120,7 @@ $conn = mysqli_connect($hostname, $user, $password, $database, $port);
 $csv_export = '';
 
 // query to get data from database
-$query = mysqli_query($conn, "SELECT `******` as '******', `********` as '*******', `********` as '*******', `********` as '********', REPLACE(`*******`, ';', ' :') as '********' FROM `user_info` JOIN `********` ON `*******`.`*******`=`********`.`*******` WHERE `md5` IN ($final_file)");
+$query = mysqli_query($conn, "SELECT `file_id` as 'FILE_ID', `md5` as 'MD5', `ip_address` as 'IP_ADDRESS', `created_at` as 'CREATE_AT', REPLACE(`user_agent`, ';', ' :') as 'USER_AGENT' FROM `user_info` JOIN `files` ON `files`.`id`=`user_info`.`file_id` WHERE `md5` IN ($final_file)");
 
 $field = mysqli_num_fields($query);
 
