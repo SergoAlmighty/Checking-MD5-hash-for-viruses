@@ -1,4 +1,4 @@
-# MD5
+# MD5 - hash
 
 The script is designed to extract MD5 hash files from the database and check them for viruses.
 
@@ -15,3 +15,5 @@ The script is designed to extract MD5 hash files from the database and check the
 ### script-all.php performs the same functions, but selects the MD5 hash for the entire period.
 
 !!! **script-all.php** is run 1 time at the beginning of work after installation, then once a day you need to run **script-yesterday.php**
+
+#### In the future, it is planned to develop and improve the script and maintain its performance.
