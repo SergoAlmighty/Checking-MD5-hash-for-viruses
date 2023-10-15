@@ -26,6 +26,7 @@ while($row = mysqli_fetch_array($query)) {
    $txt_export.= '
 ';
 }
+
 // Write txt result to file
 file_put_contents($txt_filename, $txt_export);
 
@@ -51,16 +52,14 @@ while(!feof($handle))
    fwrite($small_data_file,'END');
 
    fclose($small_data_file);
-
-
+  
 //----------------------------------------- Sending files for virus scanning via api -----------------------------------------//
 
    $name_check_file = 'check_small_data_md5_'.$f.'.txt';
    $check_small_data_file = '/scanned-files/check_file/'.$name_check_file;
    echo shell_exec("netcat hash.cymru.com 43 < /scanned-files/small_file/$name_small_file > $check_small_data_file");  //Run the list through GNU netcat
 
-
-//----------------------------------------- BEGIN Deleting hash without viruses -----------------------------------------//
+//----------------------------------------- BEGIN Deleting hash without viruses -----------------------------------------//  
 
 //Set source file name and path
    $list = array();
@@ -122,6 +121,7 @@ $csv_export = '';
 // query to get data from database
 $query = mysqli_query($conn, "SELECT `file_id` as 'FILE_ID', `md5` as 'MD5', `ip_address` as 'IP_ADDRESS', `created_at` as 'CREATE_AT', REPLACE(`user_agent`, ';', ' :') as 'USER_AGENT' FROM `user_info` JOIN `files` ON `files`.`id`=`user_info`.`file_id` WHERE `md5` IN ($final_file)");
 
+
 $field = mysqli_num_fields($query);
 
 // create line with field names
@@ -146,7 +146,6 @@ while($row = mysqli_fetch_array($query)) {
 $report = '/scanned-files/Report_columns '.date('Y.m.d').'.csv';
 file_put_contents($report, $csv_export);
 
-
 //----------------------------------------- Removing unnecessary txt files ---------------------------------------------//
 
 $files = glob('/scanned-files/*.txt'); // get all file names
@@ -170,7 +169,7 @@ foreach($files as $file){ // iterate files
    }
 }
 
-$files = glob('/scanned-files/final_file/*.txt'); // get all file names
+files = glob('/scanned-files/final_file/*.txt'); // get all file names
 foreach($files as $file){ // iterate files
    if(is_file($file)) {
       unlink($file); // delete file
