@@ -13,7 +13,6 @@ $query = mysqli_query($conn, "SELECT `md5` FROM `user_info` WHERE `created_at` B
 
 $field = mysqli_field_count($conn);
 
-
 // newline (seems to work both on Linux & Windows servers)
 $txt_export.= '';
 
